@@ -6,7 +6,9 @@ const chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised).should()
 
 var HDWalletProvider = require('truffle-hdwallet-provider')
+var PrivateKeyProvider = require("truffle-privatekey-provider");
 
+const PRIV_KEY = process.env.PRIV_KEY
 const MNEMONIC =
   process.env.MNEMONIC ||
   'clock radar mass judge dismiss just intact mind resemble fringe diary casino'
@@ -25,8 +27,8 @@ module.exports = {
     },
     bor: {
       provider: () =>
-        new HDWalletProvider(
-          MNEMONIC,
+        new PrivateKeyProvider(
+          PRIV_KEY,
           `http://localhost:8545`
         ),
       network_id: '*', // match any network
@@ -34,8 +36,8 @@ module.exports = {
     },
     ropsten: {
       provider: () =>
-        new HDWalletProvider(
-          MNEMONIC,
+        new PrivateKeyProvider(
+          PRIV_KEY,
           `https://ropsten.infura.io/v3/${API_KEY}`
         ),
       network_id: 3,
@@ -46,8 +48,8 @@ module.exports = {
     },
     goerli: {
       provider: function() {
-        return new HDWalletProvider(
-          MNEMONIC,
+        return new PrivateKeyProvider(
+          PRIV_KEY,
           `https://goerli.infura.io/v3/${API_KEY}`
         )
       },
@@ -56,8 +58,8 @@ module.exports = {
     },
     kovan: {
       provider: function() {
-        return new HDWalletProvider(
-          MNEMONIC,
+        return new PrivateKeyProvider(
+          PRIV_KEY,
           `https://kovan.infura.io/v3/${API_KEY}`
         )
       },
@@ -66,13 +68,23 @@ module.exports = {
     },
     mainnet: {
       provider: function() {
-        return new HDWalletProvider(
-          MNEMONIC,
+        return new PrivateKeyProvider(
+          PRIV_KEY,
           `https://mainnet.infura.io/v3/${API_KEY}`
         )
       },
       network_id: 1,
       gas: 4000000
+    },
+    rinkeby: {
+      provider: function() {
+        return new PrivateKeyProvider(
+          PRIV_KEY,
+          `https://rinkeby.infura.io/v3/${API_KEY}`
+        )
+      },
+      network_id: 4,
+      gas: 8000000
     }
   },
   compilers: {
