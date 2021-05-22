@@ -5,8 +5,7 @@ const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
 chai.use(chaiAsPromised).should()
 
-var HDWalletProvider = require('truffle-hdwallet-provider')
-var PrivateKeyProvider = require("truffle-privatekey-provider");
+var HDWalletProvider = require('@truffle/hdwallet-provider')
 
 const PRIV_KEY = process.env.PRIV_KEY
 const MNEMONIC =
@@ -27,7 +26,7 @@ module.exports = {
     },
     bor: {
       provider: () =>
-        new PrivateKeyProvider(
+        new HDWalletProvider(
           PRIV_KEY,
           `http://localhost:8545`
         ),
@@ -36,7 +35,7 @@ module.exports = {
     },
     ropsten: {
       provider: () =>
-        new PrivateKeyProvider(
+        new HDWalletProvider(
           PRIV_KEY,
           `https://ropsten.infura.io/v3/${API_KEY}`
         ),
@@ -48,7 +47,7 @@ module.exports = {
     },
     goerli: {
       provider: function() {
-        return new PrivateKeyProvider(
+        return new HDWalletProvider(
           PRIV_KEY,
           `https://goerli.infura.io/v3/${API_KEY}`
         )
@@ -58,7 +57,7 @@ module.exports = {
     },
     kovan: {
       provider: function() {
-        return new PrivateKeyProvider(
+        return new HDWalletProvider(
           PRIV_KEY,
           `https://kovan.infura.io/v3/${API_KEY}`
         )
@@ -68,7 +67,7 @@ module.exports = {
     },
     mainnet: {
       provider: function() {
-        return new PrivateKeyProvider(
+        return new HDWalletProvider(
           PRIV_KEY,
           `https://mainnet.infura.io/v3/${API_KEY}`
         )
@@ -78,7 +77,7 @@ module.exports = {
     },
     rinkeby: {
       provider: function() {
-        return new PrivateKeyProvider(
+        return new HDWalletProvider(
           PRIV_KEY,
           `https://rinkeby.infura.io/v3/${API_KEY}`
         )

@@ -28,12 +28,12 @@ async function stake() {
   const stakeManager = await getStakeManager()
   const maticToken = await RootToken.at(contracts.root.tokens.MaticToken)
   console.log({ stakeManager: stakeManager.address, maticToken: maticToken.address, stakeToken: await stakeManager.token() })
-  console.log('Sender accounts has a balanceOf', (await maticToken.balanceOf(accounts[0])).toString())
-  maticToken.approve(stakeManager.address, web3.utils.toWei('1000000'))
+  console.log('Sender accounts has a balanceOf', (await maticToken.balanceOf(validatorAccount)).toString())
+  await maticToken.approve(stakeManager.address, web3.utils.toWei('1000000'), {from: validatorAccount})
   await delay(5)
   console.log('sent approve tx, staking now...')
   // Remember to change the 4th parameter to false if delegation is not required
-  stakeManager.stakeFor(validatorAccount, stakeAmount, heimdallFee, true, pubkey)
+  await stakeManager.stakeFor(validatorAccount, stakeAmount, heimdallFee, true, pubkey, {from: validatorAccount})
   return delay(5)
 }
 
