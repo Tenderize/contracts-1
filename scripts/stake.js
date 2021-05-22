@@ -1,6 +1,12 @@
+const { buildSubmitHeaderBlockPaylod } = require('../test/helpers/utils.js')
+const { buildTreeFee } = require('../test/helpers/proofs.js')
+const ethUtils = require('ethereumjs-util')
+// const { buildSubmitHeaderBlockPaylod } = require('../test/helpers/utils.js')
+
 const contracts = require('../contractAddresses.json')
 
 const RootToken = artifacts.require('TestToken')
+// const RootChain = artifacts.require('RootChain')
 const Registry = artifacts.require('Registry')
 const StakeManager = artifacts.require('StakeManager')
 const TestToken = artifacts.require('TestToken')
@@ -8,8 +14,26 @@ const DepositManager = artifacts.require('DepositManager')
 const Governance = artifacts.require('Governance')
 const WithdrawManager = artifacts.require('WithdrawManager')
 const MRC20 = artifacts.require('MRC20')
+const ValidatorShare = artifacts.require('ValidatorShare')
 
 const toBN = web3.utils.toBN
+
+// function increaseTime() {
+//   web3.currentProvider.send('evm_mine', (err, res) => { if (err) { console.log(err) } })
+// }
+
+// const waitNBlocks = async n => {
+//   const sendAsync = promisify(web3.currentProvider.sendAsync)
+//   await Promise.all(
+//     [...Array(n).keys()].map(i =>
+//       sendAsync({
+//         jsonrpc: '2.0',
+//         method: 'evm_mine',
+//         id: i
+//       })
+//     )
+//   )
+// }
 
 async function getStakeManager() {
   return StakeManager.at(contracts.root.StakeManagerProxy)
@@ -29,12 +53,61 @@ async function stake() {
   const maticToken = await RootToken.at(contracts.root.tokens.MaticToken)
   console.log({ stakeManager: stakeManager.address, maticToken: maticToken.address, stakeToken: await stakeManager.token() })
   console.log('Sender accounts has a balanceOf', (await maticToken.balanceOf(validatorAccount)).toString())
-  await maticToken.approve(stakeManager.address, web3.utils.toWei('1000000'), {from: validatorAccount})
+  await maticToken.approve(stakeManager.address, web3.utils.toWei('1000000'), { from: validatorAccount })
   await delay(5)
   console.log('sent approve tx, staking now...')
   // Remember to change the 4th parameter to false if delegation is not required
-  await stakeManager.stakeFor(validatorAccount, stakeAmount, heimdallFee, true, pubkey, {from: validatorAccount})
+  await stakeManager.stakeFor(validatorAccount, stakeAmount, heimdallFee, true, pubkey, { from: validatorAccount })
+
+  const validatorId = await stakeManager.signerToValidator(validatorAccount)
+  console.log('Validator ID:', validatorId.toString())
+
+  console.log('Delegation test ...')
+  const _validator = await stakeManager.validators(validatorId)
+  const validator = await ValidatorShare.at(_validator.contractAddress)
+
+  console.log('approved, delegating now...')
+  const result = await validator.buyVoucher(web3.utils.toWei('100'), 0)
+  console.log(`Bond ${web3.utils.toWei('100')} tokens to ${validatorId}: txHash ${result.tx}`)
+
   return delay(5)
+}
+
+async function buyVoucher() {
+  const stakeManager = await getStakeManager()
+  const validatorId = 1
+  console.log('Delegation test ...')
+  const _validator = await stakeManager.validators(validatorId)
+  const validator = await ValidatorShare.at(_validator.contractAddress)
+
+  console.log('approved, delegating now...')
+  const result = await validator.buyVoucher(web3.utils.toWei('100'), 0)
+  console.log(`Bond ${web3.utils.toWei('100')} tokens to ${validatorId}: txHash ${result.tx}`)
+}
+
+async function rewards() {
+  const stakeManager = await getStakeManager()
+  const _validator = await stakeManager.validators(1)
+  const validator = await ValidatorShare.at(_validator.contractAddress)
+  const validatorAccount = process.argv[6]
+  const accFees = []
+  accFees[validator] = []
+  accFees[validator][0] = [0]
+  let tree = await buildTreeFee([validatorAccount], accFees, 0)
+
+  const { data, sigs } = buildSubmitHeaderBlockPaylod(
+    validatorAccount,
+    0,
+    10,
+    '' /* root */,
+    Object.values(validatorAccount),
+    { rewardsRootHash: tree.getRoot(), allValidators: true, getSigs: true, totalStake: web3.utils.toWei('100') }
+  )
+  console.log(data, sigs)
+  const activeAmount = await validator.activeAmount()
+  console.log(activeAmount.toString())
+  const rewards = await validator.getLiquidRewards(process.argv[6])
+  console.log(rewards.toString())
 }
 
 async function topUpForFee() {
@@ -107,12 +180,12 @@ async function updateDynasty() {
 async function updateExitPeriod() {
   const wm = await WithdrawManager.at(contracts.root.WithdrawManagerProxy)
   let period = await wm.HALF_EXIT_PERIOD()
-  console.log({ period: period.toString()})
+  console.log({ period: period.toString() })
 
   await wm.updateExitPeriod('5')
 
   period = await wm.HALF_EXIT_PERIOD()
-  console.log({ period: period.toString()})
+  console.log({ period: period.toString() })
 }
 
 async function child() {
@@ -120,9 +193,11 @@ async function child() {
   console.log(await mrc20.owner())
 }
 
-module.exports = async function (callback) {
+module.exports = async function(callback) {
   try {
-    await stake()
+    // await stake()
+    await rewards()
+    // await buyVoucher()
     // await child()
     // await mapToken()
     // await topUpForFee()
@@ -138,5 +213,5 @@ module.exports = async function (callback) {
 }
 
 function delay(s) {
-  return new Promise(resolve => setTimeout(resolve, s * 1000));
+  return new Promise(resolve => setTimeout(resolve, s * 1000))
 }
