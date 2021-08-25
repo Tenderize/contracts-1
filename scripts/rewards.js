@@ -61,7 +61,7 @@ async function submitHeaderBlock() {
   // tree
   //   .verify(blockHeader, end - start, tree.getRoot(), blockProof)
   //   .should.equal(true)
-  const { data, sigs } = utils.buildSubmitHeaderBlockPaylod(
+  const { data, sigs } = utils.buildsubmitCheckpointPaylod(
     proposer.address,
     start,
     end,
@@ -71,7 +71,7 @@ async function submitHeaderBlock() {
   )
 
   const rootChain = await RootChain.at(contracts.root.RootChainProxy)
-  const res = await rootChain.submitHeaderBlock(
+  const res = await rootChain.submitCheckpoint(
     data, sigs)
   return res
 }
@@ -84,8 +84,8 @@ async function checkStake() {
   const valShare = await ValidatorShare.at(validator.contractAddress)
 
   console.log('stakeManager.totalRewards:', web3.utils.fromWei(await stakeManager.totalRewards()))
-  console.log('valShare.validatorRewards:', web3.utils.fromWei(await valShare.validatorRewards()))
-  console.log('valShare.rewards:', web3.utils.fromWei(await valShare.rewards()))
+  console.log('valShare.getRewardPerShare:', web3.utils.fromWei(await valShare.getRewardPerShare()))
+  // console.log('valShare.rewards:', web3.utils.fromWei(await valShare.rewards()))
 
   const accounts = await web3.eth.getAccounts()
 
