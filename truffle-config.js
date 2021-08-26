@@ -31,7 +31,7 @@ module.exports = {
         )
       },
       network_id: 4,
-      gas: 8000000,
+      gas: 12000000,
       gasPrice: 10000000000, // 10 gwei
       skipDryRun: true
     },
@@ -39,7 +39,7 @@ module.exports = {
       provider: () =>
         new HDWalletProvider(
           MNEMONIC,
-          `http://localhost:8545`
+          `http://147.182.246.9:8545`
         ),
       network_id: '*', // match any network
       gasPrice: '0'
