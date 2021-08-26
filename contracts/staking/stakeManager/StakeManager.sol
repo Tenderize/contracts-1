@@ -94,7 +94,7 @@ contract StakeManager is
         WITHDRAWAL_DELAY = (2**13); // unit: epoch
         currentEpoch = 1;
         dynasty = 886; // unit: epoch 50 days
-        CHECKPOINT_REWARD = 20188 * (10**18); // update via governance
+        CHECKPOINT_REWARD = 2 * (10**18); // update via governance
         minDeposit = (10**18); // in ERC20 token
         minHeimdallFee = (10**18); // in ERC20 token
         checkPointBlockInterval = 1024;
