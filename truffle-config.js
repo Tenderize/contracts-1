@@ -23,6 +23,18 @@ module.exports = {
       skipDryRun: true,
       gas: 7000000
     },
+    rinkeby: {
+      provider: function() {
+        return new HDWalletProvider(
+          process.env.PRIV_KEY,
+          `https://rinkeby.infura.io/v3/${API_KEY}`
+        )
+      },
+      network_id: 4,
+      gas: 8000000,
+      gasPrice: 10000000000, // 10 gwei
+      skipDryRun: true
+    },
     bor: {
       provider: () =>
         new HDWalletProvider(
