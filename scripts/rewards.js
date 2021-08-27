@@ -87,15 +87,15 @@ async function checkStake() {
   console.log('valShare.getRewardPerShare:', web3.utils.fromWei(await valShare.getRewardPerShare()))
   // console.log('valShare.rewards:', web3.utils.fromWei(await valShare.rewards()))
 
-  const accounts = await web3.eth.getAccounts()
+  // const accounts = await web3.eth.getAccounts()
 
-  const exchangeRate = await valShare.exchangeRate()
-  const shares = (await valShare.balanceOf(accounts[1]))
-  const prec = web3.utils.toBN(100)
-  console.log('share', shares.toString())
-  console.log('fx rate', exchangeRate.toString())
-  const tokensFromShares = exchangeRate.mul(shares).div(prec)
-  console.log(web3.utils.fromWei(tokensFromShares))
+  // const exchangeRate = await valShare.exchangeRate()
+  // const shares = (await valShare.balanceOf(accounts[1]))
+  // const prec = web3.utils.toBN(100)
+  // console.log('share', shares.toString())
+  // console.log('fx rate', exchangeRate.toString())
+  // const tokensFromShares = exchangeRate.mul(shares).div(prec)
+  // console.log(web3.utils.fromWei(tokensFromShares))
 }
 
 module.exports = async function(callback) {
