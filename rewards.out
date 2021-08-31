@@ -1,0 +1,13 @@
+
+> matic-protocol@0.3.2 truffle
+> truffle "exec" "scripts/rewards.js" "--network" "rinkeby" "0xe426ad6DDF3905de9D798f49cb19d6E9A6a3335f"
+
+Using network 'rinkeby'.
+
+val share 0x4EEccD7b45256Ed3C03E5DE3eADE8047B135162c
+stakeManager.totalRewards: 0
+valShare.getRewardPerShare: 209893.764351083852324761
+Creating Typechain artifacts in directory typechain for target ethers-v5
+Successfully generated Typechain artifacts!
+Rebasing Matic on rinkeby
+Rebase succeeded

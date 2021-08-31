@@ -41,6 +41,8 @@ async function submitHeaderBlock() {
     offset = event.block.number
   }
   event.block.number -= offset // rootChain will thank you for this
+  // Submit only first 100 blocks
+  event.block.number = event.block.number > 100 ? 100 : event.block.number
   const start = lastEndBlock + 1
   const end = event.block.number
   lastEndBlock = end
