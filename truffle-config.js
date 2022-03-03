@@ -7,6 +7,7 @@ chai.use(chaiAsPromised).should()
 
 var HDWalletProvider = require('@truffle/hdwallet-provider')
 
+const PRIV = process.env.PRIV_KEY
 const MNEMONIC =
   process.env.MNEMONIC ||
   'clock radar mass judge dismiss just intact mind resemble fringe diary casino'
@@ -71,6 +72,18 @@ module.exports = {
       network_id: 1,
       gas: 3000000,
       gasPrice: '45000000000'
+    },
+    rinkeby: {
+      provider: function() {
+        return new HDWalletProvider(
+          PRIV,
+          `https://rinkeby.infura.io/v3/${API_KEY}`
+        )
+      },
+      network_id: 5,
+      gas: 8000000,
+      gasPrice: 10000000000, // 10 gwei
+      skipDryRun: true
     }
   },
   compilers: {
