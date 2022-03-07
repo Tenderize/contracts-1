@@ -185,8 +185,8 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(RootChain)
     await deployer.deploy(RootChainProxy, RootChain.address, Registry.address, process.env.HEIMDALL_ID)
     await deployer.deploy(StateSender)
-    await deployer.deploy(StakeManagerTestable)
-    await deployer.deploy(StakeManagerTest)
+    //  await deployer.deploy(StakeManagerTestable)
+    // await deployer.deploy(StakeManagerTest)
 
     await deployer.deploy(DepositManager)
     await deployer.deploy(

@@ -19,16 +19,15 @@ module.exports = {
   networks: {
     development: {
       host: 'localhost',
-      port: 9545,
+      port: 8545,
       network_id: '*', // match any network
-      skipDryRun: true,
-      gas: 7000000
+      skipDryRun: true
     },
     bor: {
       provider: () =>
         new HDWalletProvider(
-          MNEMONIC,
-          `http://localhost:8545`
+          PRIV,
+          `http://144.126.216.112:8545`
         ),
       network_id: '*', // match any network
       gasPrice: '0'
@@ -77,12 +76,12 @@ module.exports = {
       provider: function() {
         return new HDWalletProvider(
           PRIV,
-          `https://rinkeby.infura.io/v3/${API_KEY}`
+          `https://eth-rinkeby.alchemyapi.io/v2/2rgSlclkCbiwYcmC3bhj80I6CwM4PPiM`
         )
       },
-      network_id: 5,
-      gas: 8000000,
-      gasPrice: 10000000000, // 10 gwei
+      network_id: 4,
+      // gas: 8000000,
+     //  gasPrice: 10000000000, // 10 gwei
       skipDryRun: true
     }
   },
