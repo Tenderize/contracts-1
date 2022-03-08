@@ -23,13 +23,13 @@ async function stake() {
   console.log({ stakeManager: stakeManager.address, maticToken: maticToken.address, stakeToken: await stakeManager.token() })
   console.log('Sender accounts has a balanceOf', (await maticToken.balanceOf(validatorAccount)).toString())
   await maticToken.approve(stakeManager.address, web3.utils.toWei('1000000'), { from: validatorAccount })
-  await delay(5)
+  await delay(25)
   console.log('sent approve tx, staking now...')
-  console.log(await stakeManager.validators(await stakeManager.getValidatorId(validatorAccount)))
+  // console.log(await stakeManager.validators(await stakeManager.getValidatorId(validatorAccount)))
   // Remember to change the 4th parameter to false if delegation is not required
-  await stakeManager.stakeFor(validatorAccount, stakeAmount, heimdallFee, true, pubkey, { from: validatorAccount })
+  await stakeManager.stakeFor(validatorAccount, stakeAmount, heimdallFee, true, pubkey, { from: validatorAccount, gasLimit: 5000000, gas: 5000000 })
   
-  return delay(5)
+  return delay(25)
 }
 
 module.exports = async function(callback) {
