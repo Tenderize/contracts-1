@@ -4,7 +4,7 @@ const ethUtils = require('ethereumjs-util')
 
 const getBlockHeader = require('../test/helpers/blocks').getBlockHeader
 const MerkleTree = require('./utils/merkle-tree')
-
+const MerkleTreeTwo = require('./utils/merkle-tree').MerkleTreeTwo
 const utils = require('./utils/utils')
 
 const StakeManager = artifacts.require('StakeManager')
@@ -20,7 +20,7 @@ async function getStakeManager() {
   return StakeManager.at(contracts.root.StakeManagerProxy)
 }
 
-let offset = 1
+let offset = 0
 let lastEndBlock = 0
 
 async function submitHeaderBlock() {
@@ -43,7 +43,7 @@ async function submitHeaderBlock() {
   event.block.number -= offset // rootChain will thank you for this
   // Submit only first 100 blocks
   event.block.number = event.block.number > 100 ? 100 : event.block.number
-  const start = lastEndBlock + 1
+  const start = event.block.number - 100
   const end = event.block.number
   lastEndBlock = end
   if (start > end) {
@@ -57,12 +57,16 @@ async function submitHeaderBlock() {
     headers.push(getBlockHeader(block))
   }
 
+  console.log(headers)
+
   const blockHeader = getBlockHeader(event.block)
-  const tree = new MerkleTree(headers)
+  const tree = new MerkleTreeTwo(headers)
   const root = ethUtils.bufferToHex(tree.getRoot())
-  // tree
-  //   .verify(blockHeader, end - start, tree.getRoot(), blockProof)
-  //   .should.equal(true)
+  const blockProof = tree.getProof(blockHeader)
+  console.log(blockHeader, end-start, tree.getRoot(), blockProof)
+  console.log(tree
+    .verify(blockHeader, end - start, tree.getRoot(), blockProof))
+    
   const { data, sigs } = utils.buildsubmitCheckpointPaylod(
     proposer.address,
     start,

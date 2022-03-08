@@ -26,9 +26,9 @@ async function stake() {
   const stakeAmount = web3.utils.toWei(process.argv[8] || '10000')
   const heimdallFee = web3.utils.toWei(process.argv[9] || '1')
   console.log(`Staking ${stakeAmount} for ${validatorAccount}...`)
-
   const accounts = await web3.eth.getAccounts()
   const stakeManager = await getStakeManager()
+  console.log(await stakeManager.locked())
   const maticToken = await RootToken.at(contracts.root.tokens.MaticToken)
   console.log({ stakeManager: stakeManager.address, maticToken: maticToken.address, stakeToken: await stakeManager.token() })
   console.log('Sender accounts has a balanceOf', (await maticToken.balanceOf(accounts[0])).toString())

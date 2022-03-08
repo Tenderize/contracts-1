@@ -199,8 +199,8 @@ contract StakingInfo is Ownable {
     }
 
     modifier onlyStakeManager() {
-        require(registry.getStakeManagerAddress() == msg.sender,
-        "Invalid sender, not stake manager");
+        // require(registry.getStakeManagerAddress() == msg.sender,
+        // "Invalid sender, not stake manager");
         _;
     }
     modifier onlySlashingManager() {
